@@ -15,12 +15,6 @@ import matplotlib.pyplot as plt
 import numpy as np
 import salem
 
-#%% 
-pft_path = 'C:\\Users\\uk083025\\Documents\\Imperial_College_London\\Deplete_and_Retreat\\JULES\\JULES_preprocessing_IO\\Output\\netcdf\\pft_clipped_d03_wgs84.nc'
-catchments_lcc_path = 'C:\\Users\\uk083025\\Documents\\Imperial_College_London\\Deplete_and_Retreat\\JULES\\JULES_preprocessing_IO\\Output\\shapefiles\\Domain03_catchments_lcc.shp'
-catchments_wgs84_path = 'C:\\Users\\uk083025\\Documents\\Imperial_College_London\\Deplete_and_Retreat\\JULES\\JULES_preprocessing_IO\\Input\\shapefiles\\Domain03_small_clip.shp'
-coords_lcc_path ='C:\\Users\\uk083025\\Documents\\Imperial_College_London\\Deplete_and_Retreat\\JULES\\JULES_preprocessing_IO\\Output\\netcdf\\jules_land_frac_wrf_dar_d03_clipped.nc'
-    
 #%% set the path to the input data
 # previously clipped global PFT map (300m resolution in wgs84 projection)
 pft_path = "~/JULES_preprocessing/Output/netcdf/pft_clipped_d03_wgs84.nc"
