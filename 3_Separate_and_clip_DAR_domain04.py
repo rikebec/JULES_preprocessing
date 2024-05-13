@@ -37,7 +37,7 @@ lat_min = np.array(ds.latitude).min()
 polygon = box(lon_min, lat_min, lon_max, lat_max)
 domain = gpd.GeoDataFrame([1], geometry=[polygon], crs=sf.crs)
 
-#%% plot to check extend of domains
+#%% plot to check extent of domains
 fig, (ax1) = plt.subplots(figsize=(12, 8))
 sf.plot(ax=ax1)
 domain.boundary.plot(ax=ax1, color="red")
@@ -61,7 +61,7 @@ lcc_crs = {'proj': 'lcc',
 catchments_clipped_proj = catchments_clipped.to_crs(lcc_crs)
 catchments_clipped_proj.crs
 
-#%% plot to check extend of domains
+#%% plot to check extent of domains
 fig,ax=plt.subplots()
 ds.land_frac.plot(ax=ax) 
 catchments_clipped_proj.plot(ax=ax, facecolor='none', edgecolor = 'k') 
