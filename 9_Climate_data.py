@@ -1,0 +1,285 @@
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""
+Created on Tue Jun 25 10:13:37 2024
+
+@author: rikebecker
+
+This script pre-processes the WRF climate data, created for the Deplete and Retreat project, 
+to make the files readable by the JULES model.
+
+The temporal resolution of the WRF data is hourly!
+
+!!! still work in progress. To be run later on JASMIN server to process data storef in the Deplete and Retreat group workspace.
+
+"""
+
+#%% load libraries
+import xarray as xr
+#import matplotlib.pyplot as plt
+#import rioxarray as rio
+#import rasterio
+import numpy as np
+import salem
+#import pandas as pd
+#import geopandas as gpd
+
+#%% set the path to the directory where the input and output data is stored
+I_directory = '/Users/rikebecker/Documents/Imperial_College_London/Deplete_and_Retreat/JULES/JULES_preprocessing_IO/Input/climate/d03'
+O_directory = '/Users/rikebecker/Documents/Imperial_College_London/Deplete_and_Retreat/JULES/JULES_preprocessing_IO/Output/climate/d03'
+
+#%% load WRF output file to get the grid dimensions/number of cells
+file_name = 'hourly_vars_d03_2019-12-06_00:00:00' #list all files and put into loop
+img_name = I_directory+file_name
+
+#%% read the image 
+ds = salem.open_wrf_dataset(img_name, decode_times=False)
+
+#%% 
+## ===================================================================== ##
+##                          Temperature (T2) in K                        ##
+## ===================================================================== ##
+temp = ds.T2 
+temp = temp.drop_vars(["lat", "lon", "xtime"])
+temp = temp.rename({"south_north":"lat","west_east":"lon"})
+
+Nc_img = xr.Dataset(
+    data_vars = {
+    't': xr.DataArray(
+        data = temp,  
+        dims = ['time','lat','lon']
+        ),
+    },
+   )
+
+#add attributes
+Nc_img.t.attrs['units'] = 'K'
+Nc_img.t.attrs['standard_name'] = 't'
+Nc_img.t.attrs['long_name'] = 'Air temperature at 2m'
+#write out and save netcdf in output directory
+Nc_img.to_netcdf(O_directory+"t.nc")
+
+#plotting for some simple quality checks
+#map
+test = temp[15]
+test.plot()
+#line plot
+temp.mean(['lat','lon']).plot() #mean temperature of entire domain
+temp.sel(lat=-1.5,lon=-0.8, method='nearest').plot() # for one specific coordinate
+
+#%% 
+## ===================================================================== ##
+##                 Precipitation (RAINC + RAINNC) in mm                  ##
+## ===================================================================== ##
+
+rainnc = ds.RAINNC
+rainc = ds.RAINC #likely to be zero
+rain_cumulative = rainc+rainnc
+
+#convert from cumulative to non-cumulative data
+rain_hourly = rain_cumulative.diff(dim='time')
+initial_values = xr.zeros_like(rain_cumulative.isel(time=0))  # to keep original number of time steps
+rain_hourly = xr.concat([initial_values, rain_hourly], dim='time')
+# Ensure the dimension order remains the same
+rain_hourly = rain_hourly.assign_coords(time=rain_cumulative['time'])
+rain_hourly = rain_hourly.transpose(*rain_cumulative.dims)
+
+#convert from mm to kg m-2 s-1
+conversion_factor = 1.0 / 1.8 #for precip data in mm/30min
+rain_hourly = rain_hourly*conversion_factor
+
+# create netCDF
+Nc_img = xr.Dataset(
+    data_vars = {
+    'precip': xr.DataArray(
+        data = rain_hourly,  
+        dims = ['time','lat','lon']
+        ),
+    },
+   )
+#add attributes
+Nc_img.precip.attrs['units'] = 'kg m-2 s-1'
+Nc_img.precip.attrs['standard_name'] = 'precip'
+Nc_img.precip.attrs['long_name'] = 'hourly total precipitation'
+#write out and save netcdf in output directory
+Nc_img.to_netcdf(O_directory+"precip.nc")
+
+
+#plotting for some simple quality checks
+#map
+test = rain_hourly[50]
+test.plot()
+#line plot
+rain_hourly.mean(['south_north','west_east']).plot() #mean temperature of entire domain
+rain_hourly.isel(south_north=100,west_east=100).plot() # for one specific coordinate
+
+rain_hourly = rain_hourly.drop_vars(["lat", "lon", "xtime"])
+rain_hourly = rain_hourly.rename({"south_north":"lat","west_east":"lon"})
+
+#%% 
+## ===================================================================== ##
+##                     Specific Humidity (Q2) in kg kg-1                 ##
+## ===================================================================== ##
+
+hum_spec = ds.Q2 
+hum_spec = hum_spec.drop_vars(["lat", "lon", "xtime"])
+hum_spec = hum_spec.rename({"south_north":"lat","west_east":"lon"})
+
+Nc_img = xr.Dataset(
+    data_vars = {
+    'q': xr.DataArray(
+        data = hum_spec,  
+        dims = ['time','lat','lon']
+        ),
+    },
+   )
+
+#add attributes
+Nc_img.q.attrs['units'] = 'kg kg-1'
+Nc_img.q.attrs['standard_name'] = 'q'
+Nc_img.q.attrs['long_name'] = 'specific humidity at 2m'
+#write out and save netcdf in output directory
+Nc_img.to_netcdf(O_directory+"q.nc")
+
+#plotting for some simple quality checks
+#map
+test = hum_spec[15]
+test.plot()
+#line plot
+hum_spec.mean(['lat','lon']).plot() #mean temperature of entire domain
+hum_spec.sel(lat=-1.5,lon=-1.0, method='nearest').plot() # for one specific coordinate
+
+#%% create netCDF
+
+
+#%% 
+## ===================================================================== ##
+##                    Wind speed (U10 and V10) in m s-1                  ##
+## ===================================================================== ##
+
+wind_u = ds.U10
+wind_v = ds.V10
+# get total wind speed (note! JULES can also handle U and V variables!)
+wind = np.sqrt(wind_u**2 + wind_v**2)
+
+wind = wind.drop_vars(["lat", "lon", "xtime"])
+wind = wind.rename({"south_north":"lat","west_east":"lon"})
+
+Nc_img = xr.Dataset(
+    data_vars = {
+    'wind': xr.DataArray(
+        data = wind,  
+        dims = ['time','lat','lon']
+        ),
+    },
+   )
+#add attributes
+Nc_img.wind.attrs['units'] = 'm s-1'
+Nc_img.wind.attrs['standard_name'] = 'wind'
+Nc_img.wind.attrs['long_name'] = 'wind speed at 2m'
+#write out and save netcdf in output directory
+Nc_img.to_netcdf(O_directory+"wind.nc")
+
+#plotting for some simple quality checks
+#map
+test = wind[15]
+test.plot()
+#line plot
+wind.mean(['lat','lon']).plot() #mean temperature of entire domain
+wind.sel(lat=-1.5,lon=-1.0, method='nearest').plot() # for one specific coordinate
+
+#%% 
+## ===================================================================== ##
+##          Short wave downwelling radiation (SWDOWN) in W m-2           ##
+## ===================================================================== ##
+
+sw_down = ds.SWDOWN
+sw_down = sw_down.drop_vars(["lat", "lon", "xtime"])
+sw_down = sw_down.rename({"south_north":"lat","west_east":"lon"})
+
+Nc_img = xr.Dataset(
+    data_vars = {
+    'sw_down': xr.DataArray(
+        data = sw_down,  
+        dims = ['time','lat','lon']
+        ),
+    },
+   )
+#add attributes
+Nc_img.wind.attrs['units'] = 'W m-2'
+Nc_img.wind.attrs['standard_name'] = 'sw_down'
+Nc_img.wind.attrs['long_name'] = 'Downward short wave flux at ground surface'
+#write out and save netcdf in output directory
+Nc_img.to_netcdf(O_directory+"sw_down.nc")
+
+#plotting for some simple quality checks
+#map
+test = sw_down[15]
+test.plot()
+#line plot
+sw_down.mean(['lat','lon']).plot() #mean temperature of entire domain
+sw_down.sel(lat=-1.5,lon=-1.0, method='nearest').plot() # for one specific coordinate
+
+#%% 
+## ===================================================================== ##
+##              Long wave downwelling radiation (GLW) in W m-2           ##
+## ===================================================================== ##
+
+lw_down = ds.GLW
+lw_down = lw_down.drop_vars(["lat", "lon", "xtime"])
+lw_down = lw_down.rename({"south_north":"lat","west_east":"lon"})
+
+Nc_img = xr.Dataset(
+    data_vars = {
+    'lw_down': xr.DataArray(
+        data = lw_down,  
+        dims = ['time','lat','lon']
+        ),
+    },
+   )
+#add attributes
+Nc_img.lw_down.attrs['units'] = 'W m-2'
+Nc_img.lw_down.attrs['standard_name'] = 'lw_down'
+Nc_img.lw_down.attrs['long_name'] = 'Downward long wave flux at ground surface'
+#write out and save netcdf in output directory
+Nc_img.to_netcdf(O_directory+"lw_down.nc")
+
+#plotting for some simple quality checks
+#map
+test = lw_down[15]
+test.plot()
+#line plot
+lw_down.mean(['lat','lon']).plot() #mean temperature of entire domain
+lw_down.sel(lat=-1.5,lon=-1.0, method='nearest').plot() # for one specific coordinate
+
+#%% 
+## ===================================================================== ##
+##                     Surface pressure (PSFC) in Pa                     ##
+## ===================================================================== ##
+
+pstar = ds.PSFC
+pstar = pstar.drop_vars(["lat", "lon", "xtime"])
+pstar = pstar.rename({"south_north":"lat","west_east":"lon"})
+
+Nc_img = xr.Dataset(
+    data_vars = {
+    'pstar': xr.DataArray(
+        data = pstar,  
+        dims = ['time','lat','lon']
+        ),
+    },
+   )
+#add attributes
+Nc_img.pstar.attrs['units'] = 'Pa'
+Nc_img.pstar.attrs['standard_name'] = 'pstar'
+Nc_img.pstar.attrs['long_name'] = 'Pressure at surface'
+#write out and save netcdf in output directory
+Nc_img.to_netcdf(O_directory+"pstar.nc")
+
+#plotting for some simple quality checks
+#map
+test = pstar[15]
+test.plot()
+#line plot
+pstar.mean(['lat','lon']).plot() #mean temperature of entire domain
+pstar.sel(lat=-1.5,lon=-1.0, method='nearest').plot() # for one specific coordinate
