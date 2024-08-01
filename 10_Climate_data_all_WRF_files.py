@@ -171,37 +171,15 @@ for file_name in file_list:
 #%% join all files for each variable
 # consider using CDO for a faster joining of the single files
 
-# for temperature
-ds = xr.open_mfdataset(O_directory+"/t_*")
-ds.compute()
-ds.to_netcdf(O_directory+'/t.nc')
+list1 = ["/t_*", "/precip_*", "/q_*", "/wind_*", "/sw_*", "/lw_*", "/pstar_*"]
+list2 = ["/t.nc", "/precip.nc", "/q.nc", "/wind.nc", "/sw_down.nc", "lw_down.nc", "/pstar.nc"]
 
-# for precipitation
-ds = xr.open_mfdataset(O_directory+"/precip_*")
-ds.compute()
-ds.to_netcdf(O_directory+'/precip.nc')
-
-# for specific humidity
-ds = xr.open_mfdataset(O_directory+"/q_*")
-ds.compute()
-ds.to_netcdf(O_directory+'/q.nc')
-
-# for wind speed
-ds = xr.open_mfdataset(O_directory+"/wind_*")
-ds.compute()
-ds.to_netcdf(O_directory+'/wind.nc')
-
-# for short wave downwelling radiation
-ds = xr.open_mfdataset(O_directory+"/sw_*")
-ds.compute()
-ds.to_netcdf(O_directory+'/sw_down.nc')
-
-# for longwave downwelling radiation
-ds = xr.open_mfdataset(O_directory+"/lw_*")
-ds.compute()
-ds.to_netcdf(O_directory+'/lw_down.nc')
-
-# for surface pressure
-ds = xr.open_mfdataset(O_directory+"/pstar_*")
-ds.compute()
-ds.to_netcdf(O_directory+'/pstar.nc')
+for var1, var2 in zip(list1, list2):
+    print("processing: "+var2)   
+    ds = xr.open_mfdataset(O_directory+var1)
+    ds.compute()
+    ds.to_netcdf(O_directory+var2)
+    # Delete single files
+    files = glob.glob(os.path.join(O_directory+var1))
+    for file in files:
+        os.remove(file)
