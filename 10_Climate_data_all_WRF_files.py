@@ -122,7 +122,7 @@ for file_name in file_list:
     wind.to_netcdf(O_directory+"/wind"+date+".nc")
 
     ## ===================================================================== ##
-    ##          Short wave downwelling radiation (SWDOWN) in W m-2           ##
+    ##          Shortwave downwelling radiation (SWDOWN) in W m-2           ##
     ## ===================================================================== ##
     
     sw_down = ds.SWDOWN
@@ -130,15 +130,15 @@ for file_name in file_list:
     sw_down = sw_down.rename({"south_north":"lat","west_east":"lon"})
 
     #add attributes
-    wind.attrs['units'] = 'W m-2'
-    wind.attrs['standard_name'] = 'sw_down'
-    wind.attrs['long_name'] = 'Downward short wave flux at ground surface'
+    sw_down.attrs['units'] = 'W m-2'
+    sw_down.attrs['standard_name'] = 'sw_down'
+    sw_down.attrs['long_name'] = 'Downward short wave flux at ground surface'
     #write out and save netcdf in output directory
-    wind.to_netcdf(O_directory+"/sw_down"+date+".nc")
+    sw_down.to_netcdf(O_directory+"/sw_down"+date+".nc")
 
  
     ## ===================================================================== ##
-    ##              Long wave downwelling radiation (GLW) in W m-2           ##
+    ##              Longwave downwelling radiation (GLW) in W m-2           ##
     ## ===================================================================== ##
 
     lw_down = ds.GLW
