@@ -165,7 +165,7 @@ for file_name in file_list:
     pstar.attrs['standard_name'] = 'pstar'
     pstar.attrs['long_name'] = 'Pressure at surface'
     #write out and save netcdf in output directory
-    pstar.to_netcdf(O_directory+"pstar"+date+".nc")
+    pstar.to_netcdf(O_directory+"/pstar"+date+".nc")
 
 
 #%% join all files for each variable
