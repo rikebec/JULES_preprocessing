@@ -29,7 +29,7 @@ I_directory = '/Users/rikebecker/Documents/Imperial_College_London/Deplete_and_R
 O_directory = '/Users/rikebecker/Documents/Imperial_College_London/Deplete_and_Retreat/JULES/JULES_preprocessing_IO/Output/climate/d03'
 
 #%% load WRF output file to get the grid dimensions/number of cells
-file_name = 'hourly_vars_d03_2019-12-06_00:00:00' #list all files and put into loop
+file_name = 'hourly_vars_d03_2019-12-06_00:00:00' 
 img_name = I_directory+file_name
 
 #%% read the image 
