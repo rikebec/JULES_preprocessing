@@ -72,8 +72,10 @@ for file_name in file_list:
     rain_hourly = rain_hourly.assign_coords(time=rain_cumulative['time'])
     rain_hourly = rain_hourly.transpose(*rain_cumulative.dims)
 
-    #convert from mm to kg m-2 s-1
-    conversion_factor = 1.0 / 1.8 #for precip data in mm/30min
+    #convert from mm/hour to kg m-2 s-1
+    #conversion_factor = 1/1800 #for precip data in mm/30min
+    conversion_factor = 1/3600 #for precip data in mm/hour
+    
     precip = rain_hourly*conversion_factor
     precip = precip.drop_vars(["lat", "lon", "xtime"])
     precip = precip.rename({"south_north":"lat","west_east":"lon"})
