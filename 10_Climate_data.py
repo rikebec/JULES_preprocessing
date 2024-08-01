@@ -10,7 +10,7 @@ to make the files readable by the JULES model.
 
 The temporal resolution of the WRF data is hourly!
 
-!!! still work in progress. To be run later on JASMIN server to process data storef in the Deplete and Retreat group workspace.
+!!! still work in progress. To be run later on JASMIN server to process data stored in the Deplete and Retreat group workspace.
 
 """
 
@@ -43,21 +43,12 @@ temp = ds.T2
 temp = temp.drop_vars(["lat", "lon", "xtime"])
 temp = temp.rename({"south_north":"lat","west_east":"lon"})
 
-Nc_img = xr.Dataset(
-    data_vars = {
-    't': xr.DataArray(
-        data = temp,  
-        dims = ['time','lat','lon']
-        ),
-    },
-   )
-
 #add attributes
-Nc_img.t.attrs['units'] = 'K'
-Nc_img.t.attrs['standard_name'] = 't'
-Nc_img.t.attrs['long_name'] = 'Air temperature at 2m'
+temp.attrs['units'] = 'K'
+temp.attrs['standard_name'] = 't'
+temp.attrs['long_name'] = 'Air temperature at 2m'
 #write out and save netcdf in output directory
-Nc_img.to_netcdf(O_directory+"t.nc")
+temp.to_netcdf(O_directory+"t.nc")
 
 #plotting for some simple quality checks
 #map
@@ -86,28 +77,21 @@ rain_hourly = rain_hourly.transpose(*rain_cumulative.dims)
 
 #convert from mm to kg m-2 s-1
 conversion_factor = 1.0 / 1.8 #for precip data in mm/30min
-rain_hourly = rain_hourly*conversion_factor
+precip = rain_hourly*conversion_factor
 
-# create netCDF
-Nc_img = xr.Dataset(
-    data_vars = {
-    'precip': xr.DataArray(
-        data = rain_hourly,  
-        dims = ['time','lat','lon']
-        ),
-    },
-   )
+precip = precip.drop_vars(["lat", "lon", "xtime"])
+precip = precip.rename({"south_north":"lat","west_east":"lon"})
+
 #add attributes
-Nc_img.precip.attrs['units'] = 'kg m-2 s-1'
-Nc_img.precip.attrs['standard_name'] = 'precip'
-Nc_img.precip.attrs['long_name'] = 'hourly total precipitation'
+precip.attrs['units'] = 'kg m-2 s-1'
+precip.attrs['standard_name'] = 'precip'
+precip.attrs['long_name'] = 'hourly total precipitation'
 #write out and save netcdf in output directory
-Nc_img.to_netcdf(O_directory+"precip.nc")
-
+precip.to_netcdf(O_directory+"precip.nc")
 
 #plotting for some simple quality checks
 #map
-test = rain_hourly[50]
+test = precip[50]
 test.plot()
 #line plot
 rain_hourly.mean(['south_north','west_east']).plot() #mean temperature of entire domain
@@ -125,21 +109,12 @@ hum_spec = ds.Q2
 hum_spec = hum_spec.drop_vars(["lat", "lon", "xtime"])
 hum_spec = hum_spec.rename({"south_north":"lat","west_east":"lon"})
 
-Nc_img = xr.Dataset(
-    data_vars = {
-    'q': xr.DataArray(
-        data = hum_spec,  
-        dims = ['time','lat','lon']
-        ),
-    },
-   )
-
 #add attributes
-Nc_img.q.attrs['units'] = 'kg kg-1'
-Nc_img.q.attrs['standard_name'] = 'q'
-Nc_img.q.attrs['long_name'] = 'specific humidity at 2m'
+hum_spec.attrs['units'] = 'kg kg-1'
+hum_spec.attrs['standard_name'] = 'q'
+hum_spec.attrs['long_name'] = 'specific humidity at 2m'
 #write out and save netcdf in output directory
-Nc_img.to_netcdf(O_directory+"q.nc")
+hum_spec.to_netcdf(O_directory+"q.nc")
 
 #plotting for some simple quality checks
 #map
@@ -148,9 +123,6 @@ test.plot()
 #line plot
 hum_spec.mean(['lat','lon']).plot() #mean temperature of entire domain
 hum_spec.sel(lat=-1.5,lon=-1.0, method='nearest').plot() # for one specific coordinate
-
-#%% create netCDF
-
 
 #%% 
 ## ===================================================================== ##
@@ -165,20 +137,12 @@ wind = np.sqrt(wind_u**2 + wind_v**2)
 wind = wind.drop_vars(["lat", "lon", "xtime"])
 wind = wind.rename({"south_north":"lat","west_east":"lon"})
 
-Nc_img = xr.Dataset(
-    data_vars = {
-    'wind': xr.DataArray(
-        data = wind,  
-        dims = ['time','lat','lon']
-        ),
-    },
-   )
 #add attributes
-Nc_img.wind.attrs['units'] = 'm s-1'
-Nc_img.wind.attrs['standard_name'] = 'wind'
-Nc_img.wind.attrs['long_name'] = 'wind speed at 2m'
+wind.attrs['units'] = 'm s-1'
+wind.attrs['standard_name'] = 'wind'
+wind.attrs['long_name'] = 'wind speed at 2m'
 #write out and save netcdf in output directory
-Nc_img.to_netcdf(O_directory+"wind.nc")
+wind.to_netcdf(O_directory+"wind.nc")
 
 #plotting for some simple quality checks
 #map
@@ -197,20 +161,12 @@ sw_down = ds.SWDOWN
 sw_down = sw_down.drop_vars(["lat", "lon", "xtime"])
 sw_down = sw_down.rename({"south_north":"lat","west_east":"lon"})
 
-Nc_img = xr.Dataset(
-    data_vars = {
-    'sw_down': xr.DataArray(
-        data = sw_down,  
-        dims = ['time','lat','lon']
-        ),
-    },
-   )
 #add attributes
-Nc_img.wind.attrs['units'] = 'W m-2'
-Nc_img.wind.attrs['standard_name'] = 'sw_down'
-Nc_img.wind.attrs['long_name'] = 'Downward short wave flux at ground surface'
+sw_down.attrs['units'] = 'W m-2'
+sw_down.attrs['standard_name'] = 'sw_down'
+sw_down.attrs['long_name'] = 'Downward short wave flux at ground surface'
 #write out and save netcdf in output directory
-Nc_img.to_netcdf(O_directory+"sw_down.nc")
+sw_down.to_netcdf(O_directory+"sw_down.nc")
 
 #plotting for some simple quality checks
 #map
@@ -229,20 +185,12 @@ lw_down = ds.GLW
 lw_down = lw_down.drop_vars(["lat", "lon", "xtime"])
 lw_down = lw_down.rename({"south_north":"lat","west_east":"lon"})
 
-Nc_img = xr.Dataset(
-    data_vars = {
-    'lw_down': xr.DataArray(
-        data = lw_down,  
-        dims = ['time','lat','lon']
-        ),
-    },
-   )
 #add attributes
-Nc_img.lw_down.attrs['units'] = 'W m-2'
-Nc_img.lw_down.attrs['standard_name'] = 'lw_down'
-Nc_img.lw_down.attrs['long_name'] = 'Downward long wave flux at ground surface'
+lw_down.attrs['units'] = 'W m-2'
+lw_down.attrs['standard_name'] = 'lw_down'
+lw_down.attrs['long_name'] = 'Downward long wave flux at ground surface'
 #write out and save netcdf in output directory
-Nc_img.to_netcdf(O_directory+"lw_down.nc")
+lw_down.to_netcdf(O_directory+"lw_down.nc")
 
 #plotting for some simple quality checks
 #map
@@ -261,20 +209,12 @@ pstar = ds.PSFC
 pstar = pstar.drop_vars(["lat", "lon", "xtime"])
 pstar = pstar.rename({"south_north":"lat","west_east":"lon"})
 
-Nc_img = xr.Dataset(
-    data_vars = {
-    'pstar': xr.DataArray(
-        data = pstar,  
-        dims = ['time','lat','lon']
-        ),
-    },
-   )
 #add attributes
-Nc_img.pstar.attrs['units'] = 'Pa'
-Nc_img.pstar.attrs['standard_name'] = 'pstar'
-Nc_img.pstar.attrs['long_name'] = 'Pressure at surface'
+pstar.attrs['units'] = 'Pa'
+pstar.attrs['standard_name'] = 'pstar'
+pstar.attrs['long_name'] = 'Pressure at surface'
 #write out and save netcdf in output directory
-Nc_img.to_netcdf(O_directory+"pstar.nc")
+pstar.to_netcdf(O_directory+"pstar.nc")
 
 #plotting for some simple quality checks
 #map
