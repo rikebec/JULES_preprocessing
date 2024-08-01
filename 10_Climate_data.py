@@ -98,9 +98,6 @@ test.plot()
 rain_hourly.mean(['south_north','west_east']).plot() #mean temperature of entire domain
 rain_hourly.isel(south_north=100,west_east=100).plot() # for one specific coordinate
 
-rain_hourly = rain_hourly.drop_vars(["lat", "lon", "xtime"])
-rain_hourly = rain_hourly.rename({"south_north":"lat","west_east":"lon"})
-
 #%% 
 ## ===================================================================== ##
 ##                     Specific Humidity (Q2) in kg kg-1                 ##
