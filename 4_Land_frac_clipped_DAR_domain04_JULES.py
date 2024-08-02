@@ -15,7 +15,7 @@ from shapely.geometry import mapping
 
 #%% set the paths
 # to land fraction file 
-land_frac_img = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_dar_d04.nc" 
+land_frac_img = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_lcc_dar_d04.nc" 
 # to the shapefile
 catchment_file = "~/JULES_preprocessing/Output/shapefiles/Domain04_catchments_lcc.shp"
 
@@ -57,6 +57,6 @@ plt.show()
 land_frac_nc['land_frac']=land_frac_clipped
 
 #%% save as clipped land frac
-land_frac_nc.to_netcdf("~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_dar_d04_clipped.nc")
+land_frac_nc.to_netcdf("~/JULES_preprocessing/Output/netcdf/jules_land_frac_lcc_dar_d04_clipped.nc")
 
 
