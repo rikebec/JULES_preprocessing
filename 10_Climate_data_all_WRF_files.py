@@ -172,7 +172,7 @@ for file_name in file_list:
 # consider using CDO for a faster joining of the single files
 
 list1 = ["/t_*", "/precip_*", "/q_*", "/wind_*", "/sw_*", "/lw_*", "/pstar_*"]
-list2 = ["/t.nc", "/precip.nc", "/q.nc", "/wind.nc", "/sw_down.nc", "lw_down.nc", "/pstar.nc"]
+list2 = ["/t.nc", "/precip.nc", "/q.nc", "/wind.nc", "/sw_down.nc", "/lw_down.nc", "/pstar.nc"]
 
 for var1, var2 in zip(list1, list2):
     print("processing: "+var2)   
