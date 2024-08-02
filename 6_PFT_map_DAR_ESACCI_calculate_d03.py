@@ -23,7 +23,7 @@ catchments_lcc_path = "~/JULES_preprocessing/Output/shapefiles/Domain03_catchmen
 # shapefiles of DAR catchments in WGS84 grid (optional - only for plotting and testing)
 catchments_wgs84_path = "~/JULES_preprocessing/Input/shapefiles/Domain03_small_clip.shp"
 # any file in the wrf grid. Needed to get coordinates.
-coords_lcc_path = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_dar_d03_clipped.nc"
+coords_lcc_path = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_lcc_dar_d03_clipped.nc"
 
 #%% read the clipped PFT map in WGS84 coordinate system
 pft = salem.open_xr_dataset(pft_path) 
