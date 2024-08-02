@@ -74,7 +74,7 @@ def safe_reciprocal(array):
 
 #%% set the path to the directory where the input and output data is stored
 I_directory_1 = '~/JULES_preprocessing/Input/netcdf/'
-I_directory_2 = '~/JULES_preprocessing/Input//earth_engine_exports/d03/'
+I_directory_2 = '~/JULES_preprocessing/Input/earth_engine_exports/d03/'
 O_directory = '~/JULES_preprocessing/Output/Soil/'
 
 #%% prepare data for clipping to DAR domain
@@ -136,8 +136,8 @@ soil_albedo = np.reshape(soil_albedo, (4714,2061))
 
 #%% set the path to the directory where the input and output data is stored
 I_directory = '~/JULES_preprocessing/Input/earth_engine_exports/d03/'
-directory_domain_lcc = '~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_dar_d03.nc'
-coords_lcc_path = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_dar_d03_clipped.nc"
+directory_domain_lcc = '~/JULES_preprocessing/Output/netcdf/jules_land_frac_lcc_dar_d03.nc'
+coords_lcc_path = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_lcc_d03_clipped.nc"
 O_directory = '~/JULES_preprocessing/Output/Soil/'
 
 
@@ -532,7 +532,7 @@ Nc_img.rio.set_spatial_dims(x_dim="lon", y_dim="lat", inplace=True)
 Nc_img.rio.write_crs("epsg:4326", inplace=True)
 
 # read in the land_frac file to get its coordinate system for later transformation
-wrf_land_frac = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_dar_d03.nc" 
+wrf_land_frac = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_lcc_dar_d03.nc" 
 ds = salem.open_wrf_dataset(wrf_land_frac)
 ds.salem.grid # check crs
 
