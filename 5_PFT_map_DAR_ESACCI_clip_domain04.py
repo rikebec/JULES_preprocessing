@@ -20,7 +20,7 @@ import numpy as np
 
 #%% set the paths to the input data
 pft_path = "~/JULES_preprocessing/Input/netcdf/ESACCI-LC-L4-PFT-Map-300m-P1Y-2020-v2.0.8.nc"
-wrf_path = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_dar_d04.nc" #to get the extent of the WRF domain
+wrf_path = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_lcc_dar_d04.nc" #to get the extent of the WRF domain
 catchments_wgs84_path = "~/JULES_preprocessing/Input/shapefiles/Basins_selected.shp"
 
 #%% read the PFT data
