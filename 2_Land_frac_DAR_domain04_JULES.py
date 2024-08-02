@@ -22,7 +22,13 @@ ds = salem.open_wrf_dataset(img_name)
 
 #%% get landmask data (1= land; 0 = water)
 ds_landmask = ds['LANDMASK']
-land_frac = np.array(ds_landmask.isel(time=1))
+ds_lakemask = ds['LAKEMASK']
+land = np.array(ds_landmask.isel(time=1))
+lake = np.array(ds_lakemask.isel(time=1))
+
+# make sure that landmask and lakemask add up to 1
+land_frac = land+lake
+land_frac[land_frac==2]=1
 
 #%% get lat lon values
 ds_lat = ds['lat'] 
@@ -61,7 +67,7 @@ Nc_img = xr.Dataset(
 
 Nc_img = Nc_img.assign_attrs(pyproj_srs = attribute)
 #%% save lat and lon information as netCDF file to be used in JULES
-Nc_img.to_netcdf("~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_dar_d04.nc")
+Nc_img.to_netcdf("~/JULES_preprocessing/Output/netcdf/jules_land_frac_lcc_dar_d04.nc")
 
 #%% plot to check extent
 test = Nc_img.land_frac
