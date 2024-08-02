@@ -143,8 +143,8 @@ soil_albedo = np.reshape(soil_albedo, (2160,2505))
 
 #%% set the path to the directory where the input and output data is stored
 I_directory = '~/JULES_preprocessing/Input/earth_engine_exports/d04/'
-directory_domain_lcc = '~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_dar_d04.nc'
-coords_lcc_path = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_dar_d04_clipped.nc"
+directory_domain_lcc = '~/JULES_preprocessing/Output/netcdf/jules_land_frac_lcc_dar_d04.nc'
+coords_lcc_path = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_lcc_dar_d04_clipped.nc"
 O_directory = '~/JULES_preprocessing/Output/Soil/'
 
 #%% ### sm_crit ###
@@ -538,7 +538,7 @@ Nc_img.rio.set_spatial_dims(x_dim="lon", y_dim="lat", inplace=True)
 Nc_img.rio.write_crs("epsg:4326", inplace=True)
 
 # read in the land_frac file to get its coordinate system for later transformation
-wrf_land_frac = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_wrf_dar_d04.nc" 
+wrf_land_frac = "~/JULES_preprocessing/Output/netcdf/jules_land_frac_lcc_dar_d04.nc" 
 ds = salem.open_wrf_dataset(wrf_land_frac)
 ds.salem.grid # check crs
 
