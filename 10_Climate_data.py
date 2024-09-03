@@ -6,7 +6,8 @@ Created on Tue Jun 25 10:13:37 2024
 @author: rikebecker
 
 This script pre-processes the WRF climate data, created for the Deplete and Retreat project, 
-to make the files readable by the JULES model. For the processing of more than just one WRF-file please see script "10_Climate_data_all_WRF_files.py"
+to make the files readable by the JULES model. 
+For the processing of more than just one WRF-file please see script "10_Climate_data_all_WRF_files.py"
 
 The temporal resolution of the WRF data is hourly!
 
