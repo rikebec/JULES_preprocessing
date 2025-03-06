@@ -140,7 +140,7 @@ Nc_img = xr.Dataset(
 Nc_img = Nc_img.transpose('type', 'lat', 'lon') # in case it need re-ordering to be displayed with ncview, change order of type, lat and lon
 
 #%% save land cover fraction information as netCDF file to be used in JULES
-Nc_img.to_netcdf('~/JULES_preprocessing/Output/netcdf/Output/netcdf/jules_pft_14_lcc_dar_d03.nc')
+Nc_img.to_netcdf('~/JULES_preprocessing/Output/netcdf/jules_pft_14_lcc_dar_d03.nc')
 
 
 
