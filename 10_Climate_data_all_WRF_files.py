@@ -26,8 +26,8 @@ import salem
 #import geopandas as gpd
 
 #%% set the path to the directory where the input and output data is stored
-I_directory = '/Users/rikebecker/Documents/Imperial_College_London/Deplete_and_Retreat/JULES/JULES_preprocessing_IO/Input/climate/d03'
-O_directory = '/Users/rikebecker/Documents/Imperial_College_London/Deplete_and_Retreat/JULES/JULES_preprocessing_IO/Output/climate/d03'
+I_directory = '.../Input/climate/d03'
+O_directory = '.../Output/climate/d03'
 
 #%% load WRF output files
 file_list = os.listdir(I_directory) #list all files and put into loop
