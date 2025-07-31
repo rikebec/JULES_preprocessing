@@ -82,7 +82,7 @@ else:
 
 
 # --- get fraction of glacier coverage --- #
-print("getting fraction of glacier coverage ...")
+print("getting fraction of glacier coverage...")
 # Set all NANs to zero and all glacier pixels to 1
 binary_mask = xr.where(np.isnan(glacier_runoff_extended), 0, 1)
 binary_mask.to_netcdf("binary_mask.nc")
