@@ -107,5 +107,5 @@ normalized.to_netcdf("Glacier_coverage_frac_per_JULES_pixel.nc")
 
 # --- get total runoff from COSIPY-pixels within each JULES-pixel --- #
 print("get total runoff from COSIPY-pixels within each JULES-pixel")
-Sum_COSIPY_runoff = regridder(glacier_runoff_extended)
-Sum_COSIPY_runoff.to_netcdf("COSIPY_runoff_per_JULES_pixel.nc")
+sum_COSIPY_runoff = regridder(glacier_runoff_extended)
+sum_COSIPY_runoff.to_netcdf("COSIPY_runoff_per_JULES_pixel.nc")
