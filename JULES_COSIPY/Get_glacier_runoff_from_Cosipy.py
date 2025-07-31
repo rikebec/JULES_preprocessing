@@ -99,7 +99,7 @@ target_grid = xr.Dataset({
 
 regridder = xe.Regridder(source_grid, target_grid, method='conservative', reuse_weights=False)
 aggregated = regridder(binary_mask)
-# get fraction of COSIPY-pixe coverage within each JULES-pixel
+# get fraction of COSIPY-pixel coverage within each JULES-pixel
 normalized = aggregated / aggregated.max()
 normalized.to_netcdf("Glacier_coverage_frac_per_JULES_pixel.nc")
 
