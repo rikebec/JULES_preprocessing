@@ -12,7 +12,7 @@ COSIPY_dir = '/home/rike/JULES_postprocessing/COSIPY_output/'
 JULES_dir = '/home/rike/dar_data/d04/'+catchment+'/ancil/'
 cosipy_file = os.path.join(COSIPY_dir, "WRF_ERA_Vilca_500m_runoff_20000101-20001231.nc")
 jules_file = os.path.join(JULES_dir, "LandFrac_"+catchment+".nc")
-'''
+
 # --- Data Loading ---
 # Load high-resolution glacier data
 glacier_ds = xr.open_dataset(cosipy_file)
@@ -82,15 +82,16 @@ binary_mask.name = "glacier_mask"
 
 print("Binary mask created.")
 '''
+# load for debugging and to skip first steps if already run.
 glacier_runoff_extended = xr.open_dataset('Extended_glacier_runoff.nc')
 glacier_runoff_extended = glacier_runoff_extended['glacier_runoff']
 binary_mask = xr.open_dataset('binary_mask.nc')
 binary_mask = binary_mask['glacier_runoff']
 grid_ds = xr.open_dataset(jules_file)
 grid_ds = grid_ds["land_frac"]
+'''
 
-
-# --- Diagnostic Print 3: Check Binary Mask ---
+# --- Diagnostic Print: Check Binary Mask ---
 num_glacier_pixels = int(binary_mask.sum().item())
 print(f"Binary mask created. Total number of glacier pixels (value=1): {num_glacier_pixels}")
 if num_glacier_pixels == 0:
