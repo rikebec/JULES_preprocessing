@@ -1,5 +1,7 @@
 import xarray as xr
 import numpy as np
+import os
+import xesmf as xe
 
 # --- User-defined variables ---
 catchment = 'Vilcanota'
